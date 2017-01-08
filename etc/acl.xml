@@ -6,7 +6,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Botamp_Botamp::config" title="Botamp config example" sortOrder="50" />
+                            <resource id="Botamp_Botamp::config" title="Botamp application settings" sortOrder="50" />
                         </resource>
                     </resource>
                 </resource>
