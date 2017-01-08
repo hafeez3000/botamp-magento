@@ -3,7 +3,6 @@
     <default>
         <settings>
             <general>
-                <api_key>YOUR_API_KEY</api_key>
             </general>
         </settings>
     </default>
