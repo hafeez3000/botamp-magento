@@ -18,8 +18,6 @@ class Entity extends Resource{
   protected function create($object) {
     $attributes = $this->getAttributes($object);
 
-    $this->logger->debug('Attributes array', $attributes);
-
     $entity = $this->botamp->entities->create($attributes);
 
     $this->setBotampId($object, $entity->getBody()['data']['id']);
