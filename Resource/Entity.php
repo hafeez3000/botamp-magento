@@ -2,40 +2,76 @@
 namespace Botamp\Botamp\Resource;
 
 class Entity extends Resource{
-
   protected $logger;
+  protected $objectManager;
 
   public function __construct(\Psr\Log\LoggerInterface $logger) {
     parent::__construct();
+    $this->objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
     $this->logger = $logger;
   }
 
-  public function createOrUpdate($product) {
-    $attributes = [
-      'title' => $product->getName(),
-      'description' => $product->getDescription(),
-      'url' => $product->getUrlModel()->getUrl($product),
-      'entity_type' => 'product',
-      // 'image_url' => $this->getProductImageUrl($product),
-    ];
-
-    if(($botamp_entity_id = $product->getData('botamp_entity_id')) !== null) {
-      $this->botamp->entities->update($botamp_entity_id, $attributes);
-      return;
-    }
-
-    $entity = $this->botamp->entities->create($attributes);
-    $product->setData('botamp_entity_id', $entity->getBody()['data']['id']);
+  public function createOrUpdate($object) {
+    $this->isCreated($object) ? $this->update($object) : $this->create($object);
   }
 
-  public function delete($product) {
-    if(($botamp_entity_id = $product->getData('botamp_entity_id')) !== null)
-      $this->botamp->entities->delete($botamp_entity_id);
+  protected function create($object) {
+    $attributes = $this->getAttributes($object);
+
+    $this->logger->debug('Attributes array', $attributes);
+
+    $entity = $this->botamp->entities->create($attributes);
+
+    $this->setBotampId($object, $entity->getBody()['data']['id']);
+  }
+
+  protected function update($object) {
+    $attributes = $this->getAttributes($object);
+    $entityId = $this->getBotampId($object);
+
+    $entity = $this->botamp->entities->update($entityId, $attributes);
+  }
+
+  public function delete($object) {
+    if($this->isCreated($object))
+      $this->botamp->entities->delete($this->getBotampId($object));
+  }
+
+  protected function isCreated($object) {
+    return $this->getBotampId($object) !== null;
+  }
+
+  protected function getBotampId($object){
+    return $object->getData('botamp_entity_id');
+  }
+
+  protected function setBotampId($object, $entityId) {
+    $object->setData('botamp_entity_id', $entityId);
+  }
+
+  protected function getAttributes($object) {
+    if ($this->getClassName($object) == 'product') {
+      return [
+        'title' => $object->getName(),
+        'description' => $object->getDescription(),
+        'url' => $object->getUrlModel()->getUrl($object),
+        'entity_type' => 'product',
+        // 'image_url' => $this->getProductImageUrl($object),
+      ];
+    }
+  }
+
+  protected function getClassName($object) {
+    $className = get_class($object);
+    if(($position = strpos($className, "\Interceptor")) !== false)
+      $className = substr($className, 0, $position);
+    $className = substr(strrchr($className, "\\"), 1);
+
+    return strtolower($className);
   }
 
   protected function getProductImageUrl($product) {
-    $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-    $imagehelper = $objectManager->create('Magento\Catalog\Helper\Image');
+    $imagehelper = $this->objectManager->create('Magento\Catalog\Helper\Image');
     return $imagehelper->init($product,'product_base_image')->getUrl();
   }
 }
