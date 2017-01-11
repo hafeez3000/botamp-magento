@@ -37,6 +37,19 @@ class Entity extends Resource{
       $this->botamp->entities->delete($this->getBotampId($object));
   }
 
+  public function importAllProducts() {
+    $factoryClassPath = 'Magento\Catalog\Model\ResourceModel\Product\CollectionFactory';
+    $collectionFactory = $this->objectManager->create($factoryClassPath);
+
+    $products = $collectionFactory->create()->addAttributeToSelect('*')->load();
+
+    foreach($products as $product) {
+      if(!$this->isCreated($product)) {
+        $this->create($product);
+      }
+    }
+  }
+
   protected function isCreated($object) {
     return $this->getBotampId($object) !== null;
   }
