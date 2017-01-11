@@ -20,19 +20,19 @@ class Entity extends Resource{
 
     $entity = $this->botamp->entities->create($attributes);
 
-    $this->setBotampId($object, $entity->getBody()['data']['id']);
+    $this->setBotampEntityId($object, $entity->getBody()['data']['id']);
   }
 
   protected function update($object) {
     $attributes = $this->getAttributes($object);
-    $entityId = $this->getBotampId($object);
+    $entityId = $this->getBotampEntityId($object);
 
     $entity = $this->botamp->entities->update($entityId, $attributes);
   }
 
   public function delete($object) {
     if($this->isCreated($object))
-      $this->botamp->entities->delete($this->getBotampId($object));
+      $this->botamp->entities->delete($this->getBotampEntityId($object));
   }
 
   public function importAllProducts() {
@@ -49,14 +49,14 @@ class Entity extends Resource{
   }
 
   protected function isCreated($object) {
-    return $this->getBotampId($object) !== null;
+    return $this->getBotampEntityId($object) !== null;
   }
 
-  protected function getBotampId($object){
+  protected function getBotampEntityId($object){
     return $object->getData('botamp_entity_id');
   }
 
-  protected function setBotampId($object, $entityId) {
+  protected function setBotampEntityId($object, $entityId) {
     $object->setData('botamp_entity_id', $entityId);
   }
 
