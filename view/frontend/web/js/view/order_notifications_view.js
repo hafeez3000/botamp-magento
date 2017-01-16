@@ -10,6 +10,7 @@ define(
       isVisible: ko.observable(true),
       appId: ko.observable(window.checkoutConfig.botampPageAttributes.appId),
       pageId: ko.observable(window.checkoutConfig.botampPageAttributes.pageId),
+      ref: ko.observable(window.checkoutConfig.botampPageAttributes.ref),
       initialize: function () {
         this._super();
         stepNavigator.registerStep(
