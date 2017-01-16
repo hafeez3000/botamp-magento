@@ -8,6 +8,8 @@ define(
         template: 'Botamp_Botamp/order_notifications_template'
       },
       isVisible: ko.observable(true),
+      appId: ko.observable(window.checkoutConfig.botampPageAttributes.appId),
+      pageId: ko.observable(window.checkoutConfig.botampPageAttributes.pageId),
       initialize: function () {
         this._super();
         stepNavigator.registerStep(
@@ -32,7 +34,7 @@ define(
 function initFacebookPlugin() {
   window.fbAsyncInit = function() {
     FB.init({
-      appId      : '946097742182566',
+      appId      : window.checkoutConfig.botampPageAttributes.appId,
       xfbml      : true,
       version    : 'v2.6'
     });

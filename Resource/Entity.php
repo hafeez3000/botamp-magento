@@ -2,13 +2,11 @@
 namespace Botamp\Botamp\Resource;
 
 class Entity extends Resource{
-  protected $logger;
   protected $objectManager;
 
-  public function __construct(\Psr\Log\LoggerInterface $logger) {
+  public function __construct() {
     parent::__construct();
     $this->objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-    $this->logger = $logger;
   }
 
   public function createOrUpdate($object) {

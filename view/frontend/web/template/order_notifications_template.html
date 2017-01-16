@@ -5,10 +5,9 @@
     <p>
       <!-- ko i18n: 'Subscribe to your order notifications'--><!-- /ko -->
     </p>
+    
     <div class='fb-send-to-messenger'
-      messenger_app_id='946097742182566'
-      page_id='1325246864172101'
-      data-ref='some_new_ref_new'
+      data-bind="attr: { messenger_app_id: appId, page_id: pageId, data-ref: ref }"
       color='blue'
       size='standard'>
     </div>
