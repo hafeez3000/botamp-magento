@@ -9,12 +9,12 @@
                 <item name="steps" xsi:type="array">
                   <item name="children" xsi:type="array">
                     <!-- The new step you add -->
-                    <item name="my-new-step" xsi:type="array">
+                    <item name="order_notifications" xsi:type="array">
                       <item name="component" xsi:type="string">Botamp_Botamp/js/view/order_notifications_view</item>
                         <!--To display step content before shipping step "sortOrder" value should be < 1-->
                         <!--To display step content between shipping step and payment step  1 < "sortOrder" < 2 -->
                         <!--To display step content after payment step "sortOrder" > 2 -->
-                      <item name="sortOrder" xsi:type="string">3</item>
+                      <item name="sortOrder" xsi:type="string">1</item>
                     </item>
                   </item>
                 </item>

@@ -7,13 +7,7 @@ define(
       defaults: {
         template: 'Botamp_Botamp/order_notifications_template'
       },
-      isVisible: ko.computed(function(){
-        console.log("got an update");
-        stepNavigator.steps();
-        // var currentStepIndex = stepNavigator.getActiveItemIndex();
-        // var currentStep = stepNavigator.steps()[currentStepIndex];
-        return window.location.hash === "#payment";
-      }),
+      isVisible: ko.observable(true),
       initialize: function () {
         this._super();
         stepNavigator.registerStep(
@@ -22,8 +16,10 @@ define(
           'Order Notifications',
           this.isVisible,
           _.bind(this.navigate, this),
-          25
+          5
         );
+
+        initFacebookPlugin();
 
         return this;
       },
@@ -32,3 +28,21 @@ define(
     });
   }
 );
+
+function initFacebookPlugin() {
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '946097742182566',
+      xfbml      : true,
+      version    : 'v2.6'
+    });
+  };
+
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = '//connect.facebook.net/en_US/sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+}
