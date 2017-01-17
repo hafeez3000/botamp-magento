@@ -6,4 +6,7 @@
   <event name="catalog_product_delete_before">
     <observer name="before_product_delete" instance="Botamp\Botamp\Observer\BeforeProductDelete" />
   </event>
+  <event name="sales_order_save_after">
+    <observer name="after_order_save" instance="Botamp\Botamp\Observer\AfterOrderSave" />
+  </event>
 </config>
