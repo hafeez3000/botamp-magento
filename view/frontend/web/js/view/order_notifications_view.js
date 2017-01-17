@@ -7,7 +7,7 @@ define(
       defaults: {
         template: 'Botamp_Botamp/order_notifications_template'
       },
-      isVisible: ko.observable(true),
+      isVisible: ko.observable(window.checkoutConfig.orderNotificationsEnabled),
       appId: ko.observable(window.checkoutConfig.botampPageAttributes.appId),
       pageId: ko.observable(window.checkoutConfig.botampPageAttributes.pageId),
       ref: ko.observable(window.checkoutConfig.botampPageAttributes.ref),
