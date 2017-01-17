@@ -23,14 +23,14 @@ class Entity extends Resource{
 
   protected function update($object) {
     $attributes = $this->getAttributes($object);
-    $entityId = $this->getBotampEntityId($object);
+    $entityId = $object->getBotampEntityId();
 
     $entity = $this->botamp->entities->update($entityId, $attributes);
   }
 
   public function delete($object) {
     if($this->isCreated($object))
-      $this->botamp->entities->delete($this->getBotampEntityId($object));
+      $this->botamp->entities->delete($object->getBotampEntityId());
   }
 
   public function importAllProducts() {
@@ -47,19 +47,13 @@ class Entity extends Resource{
   }
 
   protected function isCreated($object) {
-    return $this->getBotampEntityId($object) !== null;
-  }
-
-  protected function getBotampEntityId($object){
-    return $object->getData('botamp_entity_id');
+    return $object->getBotampEntityId() !== null;
   }
 
   protected function setBotampEntityId($object, $entityId) {
-    $logger = $this->objectManager->create('\Psr\Log\LoggerInterface');
-    $object->setData('botamp_entity_id', $entityId);
-    $logger->debug('Botamp entity id value',
-                  ['object' => $this->getObjectEntityType($object),
-                   'entity id value' => $object->getData('botamp_entity_id')]);
+    $object->setBotampEntityId($entityId);
+    if($this->getObjectEntityType($object) === 'order')
+      $object->save();
   }
 
   protected function getAttributes($object) {
@@ -81,7 +75,7 @@ class Entity extends Resource{
   			'title' => $orderMeta['order_number'] . ' - ' . $orderMeta['recipient_name'],
   			'url' => $orderMeta['order_url'],
   			'entity_type' => 'order',
-  			'status' => $object->getStatusLabel(),
+  			'status' => $object->getState(),
   			'meta' => $orderMeta
   		];
     }
@@ -102,7 +96,6 @@ class Entity extends Resource{
   }
 
   protected function getOrderMeta($order) {
-    $orderViewInfo = $this->objectManager->create('Magento\Sales\Block\Adminhtml\Order\View\Info');
     $address = $order->getShippingAddress() === null ? $order->getBillingAddress() : $order->getShippingAddress();
 
     return [
@@ -110,7 +103,7 @@ class Entity extends Resource{
 			'order_number' => $order->getRealOrderId(),
 			'currency' => $order->getOrderCurrencyCode(),
 			'payment_method' => $order->getPayment()->getMethodInstance()->getTitle(),
-			'order_url' => $orderViewInfo->getViewUrl($order->getId()),
+			'order_url' => $this->getOrderFrontendUrl($order),
 			'timestamp' => strtotime($order->getCreatedAt()),
 			'address' => [
 				'street_1' => $address->getStreet()[0],
@@ -163,5 +156,10 @@ class Entity extends Resource{
     }
 
     return $adjustments;
+  }
+
+  protected function getOrderFrontendUrl($order) {
+    $urlModel = $this->objectManager->create('Magento\Framework\Url');
+    return $urlModel->getUrl('sales/order/view', ['order_id' => $order->getId()]);
   }
 }
