@@ -43,5 +43,31 @@ class InstallData implements InstallDataInterface {
           'apply_to' => ''
         ]
       );
+
+      $eavSetup->addAttribute(
+        \Magento\Sales\Model\Order::ENTITY,
+        'botamp_entity_id',
+        [
+          'type' => 'int',
+          'backend' => '',
+          'frontend' => '',
+          'label' => 'Botamp Entity ID',
+          'input' => '',
+          'class' => '',
+          'source' => '',
+          'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+          'visible' => false,
+          'required' => false,
+          'user_defined' => false,
+          'default' => 0,
+          'searchable' => false,
+          'filterable' => false,
+          'comparable' => false,
+          'visible_on_front' => false,
+          'used_in_product_listing' => false,
+          'unique' => true,
+          'apply_to' => ''
+        ]
+      );
     }
 }
