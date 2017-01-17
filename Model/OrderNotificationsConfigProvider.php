@@ -7,13 +7,16 @@ class OrderNotificationsConfigProvider implements ConfigProviderInterface {
 
   protected $me;
   protected $checkoutSession;
+  protected $configHelper;
 
   public function __construct(
     \Botamp\Botamp\Resource\Me $me,
-    \Magento\Checkout\Model\Session $checkoutSession
+    \Magento\Checkout\Model\Session $checkoutSession,
+    \Botamp\Botamp\Helper\ConfigHelper $configHelper
   ) {
     $this->me = $me;
     $this->checkoutSession = $checkoutSession;
+    $this->configHelper = $configHelper;
   }
 
   public function getConfig() {
@@ -23,10 +26,11 @@ class OrderNotificationsConfigProvider implements ConfigProviderInterface {
     $this->checkoutSession->setOrderRef($orderRef);
 
     return [
+      'orderNotificationsEnabled' => $this->configHelper->orderNotificationsEnabled(),
       'botampPageAttributes' => [
         'appId' => $pageAttributes['facebook_app_id'],
         'pageId' => $pageAttributes['facebook_id'],
-        'ref' => $orderRef
+        'ref' => $orderRef,
       ]
     ];
   }
