@@ -21,8 +21,7 @@ define(
           _.bind(this.navigate, this),
           5
         );
-
-        initFacebookPlugin();
+        setTimeout(initMessengerPlugin(), 0);
 
         return this;
       },
@@ -32,7 +31,7 @@ define(
   }
 );
 
-function initFacebookPlugin() {
+function initMessengerPlugin() {
   window.fbAsyncInit = function() {
     FB.init({
       appId      : window.checkoutConfig.botampPageAttributes.appId,
