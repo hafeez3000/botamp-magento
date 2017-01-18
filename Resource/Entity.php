@@ -1,6 +1,8 @@
 <?php
 namespace Botamp\Botamp\Resource;
 
+use Botamp\Botamp\Helper\OrderHelper;
+
 class Entity extends Resource{
   protected $objectManager;
 
@@ -10,27 +12,73 @@ class Entity extends Resource{
   }
 
   public function createOrUpdate($object) {
-    $this->isCreated($object) ? $this->update($object) : $this->create($object);
+    return $this->isCreated($object) ? $this->update($object) : $this->create($object);
   }
 
   protected function create($object) {
-    $attributes = $this->getAttributes($object);
+    $entityType = $this->getObjectEntityType($object);
+    if($entityType == 'product')
+      return $this->createProductEntity($object);
+    elseif($entityType == 'order')
+      return $this->createOrderEntity($object);
+  }
 
+  protected function createProductEntity($product) {
+    $attributes = $this->getAttributes($product);
+    $entity = $this->botamp->entities->create($attributes);
+    $product->setBotampEntityId($entity->getBody()['data']['id']);
+
+    return $entity;
+  }
+
+  protected function createOrderEntity($order) {
+    $contactRef = $this->checkoutSession->getBotampContactRef();
+    $contact = (new Contact())->get($contactRef);
+    if($contact === null)
+      return;
+
+    $attributes = $this->getAttributes($order);
     $entity = $this->botamp->entities->create($attributes);
 
-    $this->setBotampEntityId($object, $entity->getBody()['data']['id']);
+    $subscription = (new Subscription())->create($entity, $contact);
+    $order->setBotampSubscriptionId($subscription->getBody()['data']['id']);
+    $order->save();
+
+    return $entity;
   }
 
   protected function update($object) {
-    $attributes = $this->getAttributes($object);
-    $entityId = $object->getBotampEntityId();
+    $entityType = $this->getObjectEntityType($object);
+    if($entityType == 'product')
+      return $this->updateProductEntity($object);
+    elseif($entityType == 'order')
+      return $this->updateOrderEntity($object);
+  }
 
-    $entity = $this->botamp->entities->update($entityId, $attributes);
+  protected function updateProductEntity($product) {
+    $attributes = $this->getAttributes($product);
+    $entityId = $product->getBotampEntityId();
+
+    return $this->botamp->entities->update($entityId, $attributes);
+  }
+
+  protected function updateOrderEntity($order) {
+    if($order->getState() == $order->getOrigData('state'))
+      return;
+
+    $attributes = $this->getAttributes($order);
+
+    return $this->botamp->entities->update($this->getOrderBotampEntityId($order), $attributes);
   }
 
   public function delete($object) {
-    if($this->isCreated($object))
+    if(!$this->isCreated($object))
+      return;
+
+    if($entityType == 'product')
       $this->botamp->entities->delete($object->getBotampEntityId());
+    elseif($entityType == 'order')
+      $this->botamp->entities->delete($this->getOrderBotampEntityId($object));
   }
 
   public function importAllProducts() {
@@ -39,21 +87,24 @@ class Entity extends Resource{
 
     $products = $collectionFactory->create()->addAttributeToSelect('*')->load();
 
-    foreach($products as $product) {
-      if(!$this->isCreated($product)) {
+    foreach($products as $product)
+      if(!$this->isCreated($product))
         $this->create($product);
-      }
-    }
   }
 
   protected function isCreated($object) {
-    return $object->getBotampEntityId() !== null;
+    $entityType = $this->getObjectEntityType($object);
+    if($entityType == 'product')
+      return $object->getBotampEntityId() !== null;
+    elseif($entityType == 'order')
+      return $object->getBotampSubscriptionId() !== null;
   }
 
-  protected function setBotampEntityId($object, $entityId) {
-    $object->setBotampEntityId($entityId);
-    if($this->getObjectEntityType($object) === 'order')
-      $object->save();
+  protected function getOrderBotampEntityId($order) {
+    $subscriptionId =  $order->getBotampSubscriptionId();
+    $subscription = (new Subscription())->get($subscriptionId);
+
+    return $subscription->getBody()['data']['attributes']['entity_id'];
   }
 
   protected function getAttributes($object) {
@@ -69,7 +120,7 @@ class Entity extends Resource{
       ];
     }
     elseif($entityType == 'order') {
-      $orderMeta = $this->getOrderMeta($object);
+      $orderMeta = (new OrderHelper($object, $this->objectManager))->getOrderMeta();
 
       return [
   			'title' => $orderMeta['order_number'] . ' - ' . $orderMeta['recipient_name'],
@@ -93,73 +144,5 @@ class Entity extends Resource{
   protected function getProductImageUrl($product) {
     $imagehelper = $this->objectManager->create('Magento\Catalog\Helper\Image');
     return $imagehelper->init($product,'product_base_image')->getUrl();
-  }
-
-  protected function getOrderMeta($order) {
-    $address = $order->getShippingAddress() === null ? $order->getBillingAddress() : $order->getShippingAddress();
-
-    return [
-			'recipient_name' => $order->getCustomerName(),
-			'order_number' => $order->getRealOrderId(),
-			'currency' => $order->getOrderCurrencyCode(),
-			'payment_method' => $order->getPayment()->getMethodInstance()->getTitle(),
-			'order_url' => $this->getOrderFrontendUrl($order),
-			'timestamp' => strtotime($order->getCreatedAt()),
-			'address' => [
-				'street_1' => $address->getStreet()[0],
-				'street_2' => $address->getStreet()[0],
-				'city' => $address->getCity(),
-				'postal_code' => $address->getPostcode(),
-				'state' => $address->getRegion(),
-				'country' => $address->getCountryId(),
-			],
-			'elements' => $this->getOrderElements($order),
-			'summary' => [
-				'subtotal' => $order->getSubtotal(),
-				'shipping_cost' => $order->getShippingAmount(),
-				'total_tax' => $order->getTaxAmount(),
-				'total_cost' => $order->getGrandTotal(),
-			],
-			'adjustments' => $this->getOrderAdjustments($order)
-		];
-  }
-
-  protected function getOrderElements($order) {
-    $elements = [];
-    foreach($order->getAllItems() as $item) {
-      $elements[] = [
-        'title' => $item->getName(),
-				'subtitle' => '',
-				'quantity' => $item->getQtyOrdered(),
-				'price' => $item->getPrice(),
-				'currency' => $order->getOrderCurrencyCode(),
-				// 'image_url' => $this->getProductImageUrl($item->getProduct()),
-      ];
-    }
-
-    return $elements;
-  }
-
-  protected function getOrderAdjustments($order) {
-    $adjustments = [];
-    if(($adjustment = $order->getAdjustmentNegative()) !== null) {
-      $adjustments[] = [
-        'name' => 'Negative Adjustment',
-        'amount' => $adjustment
-      ];
-    }
-    if(($adjustment = $order->getAdjustmentPositive()) !== null) {
-      $adjustments[] = [
-        'name' => 'Positive Adjustment',
-        'amount' => $adjustment
-      ];
-    }
-
-    return $adjustments;
-  }
-
-  protected function getOrderFrontendUrl($order) {
-    $urlModel = $this->objectManager->create('Magento\Framework\Url');
-    return $urlModel->getUrl('sales/order/view', ['order_id' => $order->getId()]);
   }
 }
