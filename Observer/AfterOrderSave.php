@@ -28,9 +28,7 @@ class AfterOrderSave implements \Magento\Framework\Event\ObserverInterface {
 
     if($eventName === 'sales_order_save_after') {
       $order = $observer->getEvent()->getOrder();
-      if($order->getState() !== $order->getOrigData('state')) {
-        $this->entity->createOrUpdate($order);
-      }
+      $this->entity->createOrUpdate($order);
     }
     elseif($eventName === 'checkout_onepage_controller_success_action') {
       $orderIds = $observer->getEvent()->getOrderIds();
