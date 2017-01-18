@@ -3,16 +3,16 @@ namespace Botamp\Botamp\Observer;
 
 class AfterOrderSave implements \Magento\Framework\Event\ObserverInterface {
 
-  protected $entity;
+  protected $orderEntity;
   protected $orderFactory;
   protected $configHelper;
 
   public function __construct(
-    \Botamp\Botamp\Resource\Entity $entity,
+    \Botamp\Botamp\Resource\OrderEntity $orderEntity,
     \Magento\Sales\Model\OrderFactory $orderFactory,
     \Botamp\Botamp\Helper\ConfigHelper $configHelper
   ) {
-    $this->entity = $entity;
+    $this->orderEntity = $orderEntity;
     $this->orderFactory = $orderFactory;
     $this->configHelper = $configHelper;
   }
@@ -21,20 +21,17 @@ class AfterOrderSave implements \Magento\Framework\Event\ObserverInterface {
     if(!$this->configHelper->orderNotificationsEnabled())
       return;
 
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $logger = $objectManager->create('\Psr\Log\LoggerInterface');
-
     $eventName = $observer->getEvent()->getName();
 
-    if($eventName === 'sales_order_save_after') {
+    if($eventName == 'sales_order_save_after') {
       $order = $observer->getEvent()->getOrder();
-      $this->entity->createOrUpdate($order);
+      $this->orderEntity->update($order);
     }
-    elseif($eventName === 'checkout_onepage_controller_success_action') {
+    elseif($eventName == 'checkout_onepage_controller_success_action') {
       $orderIds = $observer->getEvent()->getOrderIds();
       if(count($orderIds)) {
         $order = $this->orderFactory->create()->load($orderIds[0]);
-        $this->entity->createOrUpdate($order);
+        $this->orderEntity->create($order);
       }
     }
   }

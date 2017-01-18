@@ -2,19 +2,19 @@
 
 namespace Botamp\Botamp\Controller\Adminhtml\ImportProducts;
 
-use Magento\Backend\App\Action\Context;
-use \Botamp\Botamp\Resource\Entity;
-
 class Index extends \Magento\Backend\App\Action {
-  protected $entity;
+  private $productEntity;
 
-  public function __construct(Context $context, Entity $entity) {
+  public function __construct(
+    \Magento\Backend\App\Action\Context $context,
+    \Botamp\Botamp\Resource\ProductEntity $productEntity
+  ) {
     parent::__construct($context);
-    $this->entity = $entity;
+    $this->productEntity = $productEntity;
   }
 
   public function execute(){
-    $this->entity->importAllProducts();
+    $this->productEntity->importAllProducts();
 
     $this->_view->loadLayout();
     $this->_view->renderLayout();

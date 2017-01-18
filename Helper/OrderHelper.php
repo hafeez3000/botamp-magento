@@ -4,24 +4,27 @@ namespace Botamp\Botamp\Helper;
 
 class OrderHelper
 {
-  private $objectManager;
-  private $order;
+  private $urlModel;
+  private $productHelper;
 
-  public function __construct($order, $objectManager) {
-    $this->order = $order;
-    $this->objectManager = $objectManager;
+  public function __construct(
+    \Magento\Framework\Url $urlModel,
+    \Botamp\Botamp\Helper\ProductHelper $productHelper
+  ) {
+    $this->urlModel = $urlModel;
+    $this->productHelper = $productHelper;
   }
 
-  public function getOrderMeta() {
-    $address = $this->order->getShippingAddress() === null ? $this->order->getBillingAddress() : $this->order->getShippingAddress();
+  public function getOrderMeta($order) {
+    $address = $order->getShippingAddress() === null ? $order->getBillingAddress() : $order->getShippingAddress();
 
     return [
-      'recipient_name' => $this->order->getCustomerName(),
-      'order_number' => $this->order->getRealOrderId(),
-      'currency' => $this->order->getOrderCurrencyCode(),
-      'payment_method' => $this->order->getPayment()->getMethodInstance()->getTitle(),
-      'order_url' => $this->getOrderFrontendUrl($this->order),
-      'timestamp' => strtotime($this->order->getCreatedAt()),
+      'recipient_name' => $order->getCustomerName(),
+      'order_number' => $order->getRealOrderId(),
+      'currency' => $order->getOrderCurrencyCode(),
+      'payment_method' => $order->getPayment()->getMethodInstance()->getTitle(),
+      'order_url' => $this->getOrderFrontendUrl($order),
+      'timestamp' => strtotime($order->getCreatedAt()),
       'address' => [
         'street_1' => $address->getStreet()[0],
         'street_2' => $address->getStreet()[0],
@@ -30,26 +33,26 @@ class OrderHelper
         'state' => $address->getRegion(),
         'country' => $address->getCountryId(),
       ],
-      'elements' => $this->getOrderElements($this->order),
+      'elements' => $this->getOrderElements($order),
       'summary' => [
-        'subtotal' => $this->order->getSubtotal(),
-        'shipping_cost' => $this->order->getShippingAmount(),
-        'total_tax' => $this->order->getTaxAmount(),
-        'total_cost' => $this->order->getGrandTotal(),
+        'subtotal' => $order->getSubtotal(),
+        'shipping_cost' => $order->getShippingAmount(),
+        'total_tax' => $order->getTaxAmount(),
+        'total_cost' => $order->getGrandTotal(),
       ],
-      'adjustments' => $this->getOrderAdjustments($this->order)
+      'adjustments' => $this->getOrderAdjustments($order)
     ];
   }
 
-  protected function getOrderElements() {
+  protected function getOrderElements($order) {
     $elements = [];
-    foreach($this->order->getAllItems() as $item) {
+    foreach($order->getAllItems() as $item) {
       $elements[] = [
         'title' => $item->getName(),
         'subtitle' => '',
         'quantity' => (int)$item->getQtyOrdered(),
         'price' => $item->getPrice(),
-        'currency' => $this->order->getOrderCurrencyCode(),
+        'currency' => $order->getOrderCurrencyCode(),
         // 'image_url' => $this->getProductImageUrl($item->getProduct()),
       ];
     }
@@ -57,15 +60,15 @@ class OrderHelper
     return $elements;
   }
 
-  protected function getOrderAdjustments() {
+  protected function getOrderAdjustments($order) {
     $adjustments = [];
-    if(($adjustment = $this->order->getAdjustmentNegative()) !== null) {
+    if(($adjustment = $order->getAdjustmentNegative()) !== null) {
       $adjustments[] = [
         'name' => 'Negative Adjustment',
         'amount' => $adjustment
       ];
     }
-    if(($adjustment = $this->order->getAdjustmentPositive()) !== null) {
+    if(($adjustment = $order->getAdjustmentPositive()) !== null) {
       $adjustments[] = [
         'name' => 'Positive Adjustment',
         'amount' => $adjustment
@@ -75,8 +78,7 @@ class OrderHelper
     return $adjustments;
   }
 
-  protected function getOrderFrontendUrl() {
-    $urlModel = $this->objectManager->create('Magento\Framework\Url');
-    return $urlModel->getUrl('sales/order/view', ['order_id' => $this->order->getId()]);
+  protected function getOrderFrontendUrl($order) {
+    return $this->urlModel->getUrl('sales/order/view', ['order_id' => $order->getId()]);
   }
 }

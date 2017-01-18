@@ -1,20 +1,22 @@
 <?php
 namespace Botamp\Botamp\Observer;
 
-class BeforeProductDelete implements \Magento\Framework\Event\ObserverInterface
-{
-  protected $entity;
+class BeforeProductDelete implements \Magento\Framework\Event\ObserverInterface {
 
-  public function __construct(\Botamp\Botamp\Resource\Entity $entity) {
-    $this->entity = $entity;
+  protected $productEntity;
+  protected $productModel;
+
+  public function __construct(
+    \Magento\Catalog\Model\Product $productModel,
+    \Botamp\Botamp\Resource\ProductEntity $productEntity
+  ) {
+    $this->productEntity = $productEntity;
+    $this->productModel = $productModel;
   }
 
   public function execute(\Magento\Framework\Event\Observer $observer) {
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
     $product_id = $observer->getEvent()->getProduct()->getId();
-    $product = $objectManager->get('Magento\Catalog\Model\Product')->load($product_id);
-
-    $this->entity->delete($product);
+    $product = $productModel->load($product_id);
+    $this->productEntity->delete($product);
   }
 }

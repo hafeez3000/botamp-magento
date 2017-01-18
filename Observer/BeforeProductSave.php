@@ -1,17 +1,16 @@
 <?php
 namespace Botamp\Botamp\Observer;
 
-class BeforeProductSave implements \Magento\Framework\Event\ObserverInterface
-{
-  protected $entity;
+class BeforeProductSave implements \Magento\Framework\Event\ObserverInterface {
 
-  public function __construct(\Botamp\Botamp\Resource\Entity $entity) {
-    $this->entity = $entity;
+  protected $productEntity;
+
+  public function __construct(\Botamp\Botamp\Resource\ProductEntity $productEntity) {
+    $this->productEntity = $productEntity;
   }
 
   public function execute(\Magento\Framework\Event\Observer $observer) {
     $product = $observer->getEvent()->getProduct();
-
-    $this->entity->createOrUpdate($product);
+    $this->productEntity->createOrUpdate($product);
   }
 }
