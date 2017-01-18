@@ -21,16 +21,16 @@ class OrderNotificationsConfigProvider implements ConfigProviderInterface {
 
   public function getConfig() {
     $pageAttributes = $this->me->get()->getBody()['data']['attributes'];
-    $orderRef = uniqid("botamp_{$_SERVER['HTTP_HOST']}_", true);
+    $contactRef = uniqid("botamp_{$_SERVER['HTTP_HOST']}_", true);
 
-    $this->checkoutSession->setOrderRef($orderRef);
+    $this->checkoutSession->setBotampContactRef($contactRef);
 
     return [
       'orderNotificationsEnabled' => $this->configHelper->orderNotificationsEnabled(),
       'botampPageAttributes' => [
         'appId' => $pageAttributes['facebook_app_id'],
         'pageId' => $pageAttributes['facebook_id'],
-        'ref' => $orderRef,
+        'ref' => $contactRef,
       ]
     ];
   }
