@@ -49,6 +49,6 @@ class InstallData implements InstallDataInterface {
       );
 
       $salesSetup = $this->salesSetupFactory->create(['resourceName' => 'sales_setup', 'setup' => $setup]);
-      $salesSetup->addAttribute('order', 'botamp_entity_id', ['type' => 'int']);
+      $salesSetup->addAttribute('order', 'botamp_subscription_id', ['type' => 'int']);
     }
 }
