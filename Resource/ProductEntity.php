@@ -22,15 +22,15 @@ class ProductEntity extends Resource {
   }
 
   public function update($product) {
-    if($product->getBotampEntityId() !== null) {
+    if(($entityId = $product->getBotampEntityId()) !== null) {
       $attributes = $this->getAttributes($product);
-      return $this->botamp->entities->update($product->getBotampEntityId(), $attributes);
+      return $this->botamp->entities->update($entityId, $attributes);
     }
   }
 
   public function delete($product) {
-    if($product->getBotampEntityId() !== null)
-      $this->botamp->entities->delete($product->getBotampEntityId());
+    if(($entityId = $product->getBotampEntityId()) !== null)
+      $this->botamp->entities->delete($entityId);
   }
 
   public function importAllProducts() {
