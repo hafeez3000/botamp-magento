@@ -3,10 +3,16 @@
   <event name="catalog_product_save_before">
     <observer name="before_product_save" instance="Botamp\Botamp\Observer\BeforeProductSave" />
   </event>
+  <event name="catalog_product_save_after">
+    <observer name="after_product_save" instance="Botamp\Botamp\Observer\AfterProductSave" />
+  </event>
   <event name="catalog_product_delete_before">
     <observer name="before_product_delete" instance="Botamp\Botamp\Observer\BeforeProductDelete" />
   </event>
   <event name="sales_order_save_after">
     <observer name="after_order_save" instance="Botamp\Botamp\Observer\AfterOrderSave" />
+  </event>
+  <event name="controller_action_predispatch">
+    <observer name="on_controller_action" instance="Botamp\Botamp\Observer\OnControllerAction"/>
   </event>
 </config>
