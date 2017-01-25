@@ -21,7 +21,7 @@ class Notifier {
     $this->configHelper = $configHelper;
 
     $this->messageTexts = [
-      'module_not_setup' => __('Please complete the Botamp plugin installation on the <a href="%1">settings page</a>.',"#"),
+      'module_not_setup' => __('Please complete the Botamp extension installation on the <a href="%1">settings page</a>.',"#"),
       'api_key_not_working' => __('Authentication with the provided API key is not working.<br/>
                                    Please provide a valid API key on the <a href="%1">settings page</a>.',"#")
     ];
