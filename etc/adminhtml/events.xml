@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
   <event name="catalog_product_save_before">
-    <observer name="before_product_save" instance="Botamp\Botamp\Observer\BeforeProductSave" />
-  </event>
-  <event name="catalog_product_save_after">
-    <observer name="after_product_save" instance="Botamp\Botamp\Observer\AfterProductSave" />
+    <observer name="before_product_save" instance="Botamp\Botamp\Observer\BeforeProductSaveObserver" />
   </event>
   <event name="catalog_product_delete_before">
-    <observer name="before_product_delete" instance="Botamp\Botamp\Observer\BeforeProductDelete" />
+    <observer name="before_product_delete" instance="Botamp\Botamp\Observer\BeforeProductDeleteObserver" />
   </event>
   <event name="sales_order_save_after">
-    <observer name="after_order_save" instance="Botamp\Botamp\Observer\AfterOrderSave" />
+    <observer name="after_order_save" instance="Botamp\Botamp\Observer\AfterOrderSaveObserver" />
   </event>
   <event name="controller_action_predispatch">
-    <observer name="on_controller_action" instance="Botamp\Botamp\Observer\OnControllerAction"/>
+    <observer name="on_controller_action" instance="Botamp\Botamp\Observer\OnControllerActionObserver"/>
+  </event>
+  <event name="admin_system_config_changed_section_botamp_settings">
+    <observer name="after_config_change" instance="Botamp\Botamp\Observer\AfterConfigChangeObserver"/>
   </event>
 </config>
