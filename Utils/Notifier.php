@@ -3,6 +3,7 @@ namespace Botamp\Botamp\Utils;
 
 class Notifier {
 
+  private $authSession;
   private $messageManager;
   private $messageFactory;
   private $backendSession;
@@ -10,11 +11,13 @@ class Notifier {
   private $messageTexts;
 
   public function __construct(
+    \Magento\Backend\Model\Auth\Session $authSession,
     \Magento\Framework\Message\ManagerInterface $messageManager,
     \Magento\Framework\Message\Factory $messageFactory,
     \Magento\Backend\Model\Session $backendSession,
     \Botamp\Botamp\Helper\ConfigHelper $configHelper
   ) {
+    $this->authSession = $authSession;
     $this->messageManager = $messageManager;
     $this->messageFactory = $messageFactory;
     $this->backendSession = $backendSession;
@@ -28,6 +31,9 @@ class Notifier {
   }
 
   public function showWarningMessages() {
+    if(!$this->authSession->isLoggedIn())
+      return;
+
     $messages = [];
     $apiKey = $this->configHelper->getApiKey();
     if($apiKey === null || empty($apiKey)) {
