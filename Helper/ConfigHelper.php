@@ -13,7 +13,7 @@ class ConfigHelper
     private function getValue($field)
     {
       return $this->scopeConfig->getValue(
-        'settings/general/'.$field,
+        'botamp_settings/general/'.$field,
         \Magento\Store\Model\ScopeInterface::SCOPE_STORE
       );
     }
