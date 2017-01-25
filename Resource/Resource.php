@@ -8,7 +8,7 @@ class Resource {
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
     $configHelper = $objectManager->create('\Botamp\Botamp\Helper\ConfigHelper');
 
-    $apiKey = $configHelper->getValue('api_key');
+    $apiKey = $configHelper->getApiKey();
 
     $this->botamp = new \Botamp\Client($apiKey);
     $this->botamp->setApiBase('http://localhost:3000/api');

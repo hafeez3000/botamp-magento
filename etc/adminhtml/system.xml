@@ -4,7 +4,7 @@
         <tab id="botamp" translate="label" sortOrder="10">
             <label>Botamp</label>
         </tab>
-        <section id="settings" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="botamp_settings" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Botamp Application Settings</label>
             <tab>botamp</tab>
             <resource>Botamp_Botamp::config</resource>

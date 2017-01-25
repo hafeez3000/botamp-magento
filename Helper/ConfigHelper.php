@@ -10,11 +10,19 @@ class ConfigHelper
       $this->scopeConfig = $scopeConfig;
     }
 
-    public function getValue($field)
+    private function getValue($field)
     {
       return $this->scopeConfig->getValue(
-        'settings/general/'.$field,
+        'botamp_settings/general/'.$field,
         \Magento\Store\Model\ScopeInterface::SCOPE_STORE
       );
+    }
+
+    public function orderNotificationsEnabled(){
+      return (int)$this->getValue('order_notifications');
+    }
+
+    public function getApiKey(){
+      return $this->getValue('api_key');
     }
 }
