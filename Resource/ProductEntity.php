@@ -39,7 +39,7 @@ class ProductEntity extends Resource {
     $collectionFactory = $objectManager->create($factoryClassPath);
     $products = $collectionFactory->create()->addAttributeToSelect('*')->load();
     foreach($products as $product)
-      if($product->getBotampEntityId() !== null)
+      if($product->getBotampEntityId() === null)
         $this->create($product);
   }
 
