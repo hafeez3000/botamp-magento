@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
-    <menu>
-      <add id="Botamp_Botamp::menu" title="Botamp" module="Botamp_Botamp" sortOrder="51" resource="Botamp_Botamp::menu"/>
-	    <add id="Botamp_Botamp::import_products" title="Import all products into Botamp" module="Botamp_Botamp" sortOrder="10" action="botamp/importproducts" resource="Botamp_Botamp::import_products" parent="Botamp_Botamp::menu"/>
-    </menu>
+  <menu>
+    <add id="Botamp_Botamp::menu" resource="Botamp_Botamp::menu" title="Botamp" module="Botamp_Botamp" sortOrder="51"/>
+    <add id="Botamp_Botamp::import" resource="Botamp_Botamp::import" title="Import all of the products in Botamp" action="botamp/import/index" module="Botamp_Botamp" parent="Botamp_Botamp::menu" sortOrder="10"/>
+  </menu>
 </config>
