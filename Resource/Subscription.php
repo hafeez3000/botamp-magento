@@ -20,4 +20,8 @@ class Subscription extends Resource{
   public function get($subscriptionId) {
     return $this->botamp->subscriptions->get($subscriptionId);
   }
+
+  public function delete($subscriptionId) {
+    return $this->botamp->subscriptions->delete($subscriptionId);
+  }
 }
