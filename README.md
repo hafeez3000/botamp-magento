@@ -1,4 +1,4 @@
-# Botamp Extension for Magento 2
+# Botamp Magento 2 Extension 
 
 [![Build Status](https://travis-ci.org/botamp/botamp-magento.svg?branch=master)](https://travis-ci.org/botamp/botamp-magento)
 
