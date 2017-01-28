@@ -1,15 +1,6 @@
-<li id="order_notifications" data-bind="fadeVisible: isVisible">
-  <div class="step-title" data-bind="i18n: 'Order Notifications'" data-role="title"></div>
-  <div id="checkout-step-title" class="step-content" data-role="content">
-    <br>
-    <p>
-      <!-- ko i18n: 'Subscribe to your order notifications'--><!-- /ko -->
-    </p>
-
-    <div class='fb-send-to-messenger'
-      data-bind="attr: { messenger_app_id: appId, page_id: pageId, 'data-ref': ref }"
-      color='blue'
-      size='standard'>
-    </div>
-  </div>
-</li>
+<div class="step-title" data-role="title" style="border-bottom:0px;"> <!-- ko i18n: 'Subscribe to your order notifications'--><!-- /ko --> </div>
+<div class='fb-send-to-messenger'
+  data-bind="attr: { messenger_app_id: appId, page_id: pageId, 'data-ref': ref }"
+  color='blue'
+  size='standard'>
+</div>

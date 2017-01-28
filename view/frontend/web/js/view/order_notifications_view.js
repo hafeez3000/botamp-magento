@@ -1,32 +1,20 @@
 define(
-  ['jquery', 'ko', 'uiComponent', 'underscore', 'Magento_Checkout/js/model/step-navigator'],
-  function ($, ko, Component, _, stepNavigator) {
+  ['ko', 'uiComponent'],
+  function (ko, Component) {
     'use strict';
 
     return Component.extend({
       defaults: {
         template: 'Botamp_Botamp/order_notifications_template'
       },
-      isVisible: ko.observable(window.checkoutConfig.orderNotificationsEnabled),
       appId: ko.observable(window.checkoutConfig.botampPageAttributes.appId),
       pageId: ko.observable(window.checkoutConfig.botampPageAttributes.pageId),
       ref: ko.observable(window.checkoutConfig.botampPageAttributes.ref),
       initialize: function () {
         this._super();
-        stepNavigator.registerStep(
-          'order_notifications',
-          null,
-          'Order Notifications',
-          this.isVisible,
-          _.bind(this.navigate, this),
-          5
-        );
         setTimeout(initMessengerPlugin(), 0);
-
         return this;
-      },
-      navigate: function () {},
-      navigateToNextStep: function () { stepNavigator.next(); }
+      }
     });
   }
 );
