@@ -14,6 +14,9 @@
     "botamp/botamp-php" : "~1.0"
   },
   "autoload": {
-    "files": [ "registration.php" ]
+    "files": [ "registration.php" ],
+    "psr-4": {
+      "Botamp\\Botamp\\": ""
+    }
   }
 }
