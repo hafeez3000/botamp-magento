@@ -5,8 +5,6 @@ class Import extends \Magento\Backend\Block\Template {
 
   protected $productFactory;
 
-  function _prepareLayout(){}
-
   public function __construct(
     \Magento\Backend\Block\Template\Context $context,
     \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productFactory

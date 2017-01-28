@@ -10,7 +10,7 @@ class ConfigHelper
       $this->scopeConfig = $scopeConfig;
     }
 
-    private function getValue($field)
+    protected function getValue($field)
     {
       return $this->scopeConfig->getValue(
         'botamp_settings/general/'.$field,

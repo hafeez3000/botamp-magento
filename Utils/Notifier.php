@@ -3,12 +3,12 @@ namespace Botamp\Botamp\Utils;
 
 class Notifier {
 
-  private $authSession;
-  private $messageManager;
-  private $messageFactory;
-  private $backendSession;
-  private $configHelper;
-  private $messageTexts;
+  protected $authSession;
+  protected $messageManager;
+  protected $messageFactory;
+  protected $backendSession;
+  protected $configHelper;
+  protected $messageTexts;
 
   public function __construct(
     \Magento\Backend\Model\Auth\Session $authSession,
@@ -45,7 +45,7 @@ class Notifier {
     $this->messageManager->addUniqueMessages($messages);
   }
 
-  private function createWarningMessage($type) {
+  protected function createWarningMessage($type) {
     return $this->messageFactory->create(
       \Magento\Framework\Message\MessageInterface::TYPE_WARNING,
       $this->messageTexts[$type]

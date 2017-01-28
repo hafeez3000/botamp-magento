@@ -1,11 +1,7 @@
 <?php
 namespace Botamp\Botamp\Resource;
 
-class Subscription extends Resource{
-
-  public function __construct() {
-    parent::__construct();
-  }
+class Subscription extends Resource {
 
   public function create( $entity, $contact ) {
 		$attributes = [

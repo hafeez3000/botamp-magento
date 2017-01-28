@@ -11,6 +11,6 @@ class ProductHelper {
   }
 
   protected function getProducImageUrl($product) {
-    return $this->imagehelper->init($this->product,'product_base_image')->getUrl();
+    return $this->imagehelper->init($product,'product_base_image')->getUrl();
   }
 }

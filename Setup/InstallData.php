@@ -10,8 +10,8 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class InstallData implements InstallDataInterface {
-    private $eavSetupFactory;
-    private $salesSetupFactory;
+    protected $eavSetupFactory;
+    protected $salesSetupFactory;
 
     public function __construct(
       EavSetupFactory $eavSetupFactory,
@@ -19,8 +19,9 @@ class InstallData implements InstallDataInterface {
       $this->eavSetupFactory = $eavSetupFactory;
       $this->salesSetupFactory = $salesSetupFactory;
     }
-
+    // @codingStandardsIgnoreStart
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context) {
+      // @codingStandardsIgnoreStart
       $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
       $eavSetup->addAttribute(
         \Magento\Catalog\Model\Product::ENTITY,

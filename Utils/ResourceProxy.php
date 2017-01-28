@@ -3,8 +3,8 @@ namespace Botamp\Botamp\Utils;
 
 class ResourceProxy {
 
-  private $resource;
-  private $backendSession;
+  protected $resource;
+  protected $backendSession;
 
   public function __construct($resource) {
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -15,7 +15,9 @@ class ResourceProxy {
   public function __call($method, $arguments) {
     $this->backendSession->setBotampAuthStatus('ok');
     try {
+      // @codingStandardsIgnoreStart
       $result = call_user_func_array([$this->resource, $method], $arguments);
+      // @codingStandardsIgnoreEnd
       return $result;
     }
     catch (\Botamp\Exceptions\Unauthorized $e) {

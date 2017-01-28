@@ -4,8 +4,8 @@ namespace Botamp\Botamp\Helper;
 
 class OrderHelper
 {
-  private $urlModel;
-  private $productHelper;
+  protected $urlModel;
+  protected $productHelper;
 
   public function __construct(
     \Magento\Framework\Url $urlModel,
