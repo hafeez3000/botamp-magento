@@ -4,10 +4,15 @@ namespace Botamp\Botamp\Resource;
 class ProductEntity extends Resource {
 
   protected $productHelper;
+  protected $productModel;
 
-  public function __construct(\Botamp\Botamp\Helper\ProductHelper $productHelper) {
+  public function __construct(
+    \Botamp\Botamp\Helper\ProductHelper $productHelper,
+    \Magento\Catalog\Model\Product $productModel
+  ) {
     parent::__construct();
     $this->productHelper = $productHelper;
+    $this->productModel = $productModel;
   }
 
   public function createOrUpdate($product) {
@@ -33,14 +38,19 @@ class ProductEntity extends Resource {
       $this->botamp->entities->delete($entityId);
   }
 
-  public function importAllProducts() {
-    $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-    $factoryClassPath = 'Magento\Catalog\Model\ResourceModel\Product\CollectionFactory';
-    $collectionFactory = $objectManager->create($factoryClassPath);
-    $products = $collectionFactory->create()->addAttributeToSelect('*')->load();
-    foreach($products as $product)
-      if($product->getBotampEntityId() === null)
-        $this->create($product);
+  public function import($productId) {
+    $product = $this->productModel->load($productId);
+    $response = ['name' => $product->getName()];
+
+    if($product->getBotampEntityId() === null) {
+      $this->create($product);
+      $product->save();
+      $response['status'] = 'success';
+    }
+    else {
+      $response['status'] = 'error';
+    }
+    return $response;
   }
 
   protected function getAttributes($product) {

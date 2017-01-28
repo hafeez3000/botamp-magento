@@ -1,1 +1,30 @@
-<h1>This is my template, there are many like it, but this one is mine.</h1>
+<h1><?php echo __('Import all of the products into Botamp') ?></h1>
+<hr>
+<p id="unexpected-error"></p>
+<div id="results">
+  <div id="success">
+    <h3><?php echo __('Successfully imported'); ?>: <span id="success-count"></span></h3>
+  </div>
+  <br><br><br>
+  <div id="errors">
+    <h3><?php echo __('Already imported before'); ?>: <span id="errors-count"></span></h3>
+  </div>
+</div>
+
+<script>
+  var BOTAMP_IMPORT_AJAXURL = "<?php echo $block->getAjaxUrl(); ?>";
+  var BOTAMP_IMPORT_SUCCESS_TEXT = "<?php echo __('has been successfully imported into Botamp.'); ?>";
+  var BOTAMP_IMPORT_ERROR_TEXT = "<?php echo __('was already imported into Botamp before.'); ?>";
+  var BOTAMP_IMPORT_UNEXPECTED_ERROR = "<?php echo __('An unexpected error occured while trying to import products into Botamp.'); ?>";
+  var BOTAMP_PRODUCT_IDS = [<?php echo $block->getProductsIds(); ?>]
+
+  require([
+    "jquery",
+    "botampImport"
+  ], function($, botampImport) {
+    if(BOTAMP_PRODUCT_IDS.length === 0)
+      $('#status').html(BOTAMP_IMPORT_NO_PRODUCT_TEXT);
+    else
+      botampImport.importProduct(BOTAMP_PRODUCT_IDS.shift());
+  });
+</script>
