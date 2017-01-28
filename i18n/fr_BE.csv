@@ -1,0 +1,19 @@
+"Please complete the Botamp extension installation on the <a href=""%1"">settings page</a>.","Veuillez terminer l'installation de l'extension Botamp sur <a href=""%1"">la page de paramètres</a>."
+"Authentication with the provided API key is not working.<br/>
+                                   Please provide a valid API key on the <a href=""%1"">settings page</a>.","L'authentification avec la cléAPI fournie ne fonctionne pas.<br/>
+                                   Veuillez entrer une clé API valide sur la <a href=""%1"">page de paramètres</a>."
+"Import all of the products into Botamp","Importer tous vos produits dans votre application Botamp."
+"Successfully imported","Importés avec succès"
+"Already imported before","Déjà importés auparavant"
+"has been successfully imported into Botamp.","a été importé avec succès dans Botamp."
+"was already imported into Botamp before.","était déjà importé dans Botamp auparavant."
+"An unexpected error occured while trying to import products into Botamp.","Une erreur inattendue s'est produite pendant l'importation des produits dans Botamp."
+"Unsubscribe from order notifications","Se désabonner des notifications de la commande"
+"You have successfully unsubscribed from your order notifications.","Vous vous êtes désabonné avec succès des notifications de votre commande."
+"Order Notifications","Notifications de commande"
+"Subscribe to your order notifications","S'abonner aux notifications de la commande"
+"Botamp Application Settings","Paramètres de l'application Botamp"
+General,Général
+"Visit your bot settings page on Botamp to get your API key.","Veuillez visiter la page de paramètres de votre bot sur Botamp afin d'obtenir votre clé API."
+"API key","Clé API"
+"Enable order notifications","Activer les notifications de commande"
