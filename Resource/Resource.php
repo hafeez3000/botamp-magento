@@ -7,10 +7,15 @@ class Resource {
   public function __construct() {
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
     $configHelper = $objectManager->create('\Botamp\Botamp\Helper\ConfigHelper');
+    $configReader = $objectManager->create('\Magento\Framework\App\DeploymentConfig\Reader');
+
+    $configData = $configReader->load(\Magento\Framework\Config\File\ConfigFilePool::APP_ENV);
 
     $apiKey = $configHelper->getApiKey();
-
     $this->botamp = new \Botamp\Client($apiKey);
-    $this->botamp->setApiBase('http://localhost:3000/api');
+
+    if(isset($configData['botamp']['api_base']))
+        $this->botamp->setApiBase($configData['botamp']['api_base']);
+
   }
 }
