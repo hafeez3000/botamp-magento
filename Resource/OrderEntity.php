@@ -5,14 +5,17 @@ class OrderEntity extends Resource {
 
   protected $checkoutSession;
   protected $orderHelper;
+  protected $subscription;
 
   public function __construct(
     \Magento\Checkout\Model\Session $checkoutSession,
-    \Botamp\Botamp\Helper\OrderHelper $orderHelper
+    \Botamp\Botamp\Helper\OrderHelper $orderHelper,
+    \Botamp\Botamp\Resource\Subscription $subscription
   ) {
     parent::__construct();
     $this->checkoutSession = $checkoutSession;
     $this->orderHelper = $orderHelper;
+    $this->subscription = $subscription;
   }
 
   public function create($order) {
@@ -20,7 +23,7 @@ class OrderEntity extends Resource {
       $attributes = $this->getAttributes($order);
       $entity = $this->botamp->entities->create($attributes);
 
-      $subscription = (new Subscription())->create($entity, $contact);
+      $subscription = $this->subscription->create($entity, $contact);
       $order->setBotampSubscriptionId($subscription->getBody()['data']['id']);
       $order->save();
       return $entity;
@@ -35,11 +38,6 @@ class OrderEntity extends Resource {
     }
   }
 
-  public function delete($order) {
-    if($order->getBotampSubscriptionId() !== null)
-    $this->botamp->entities->delete($this->getBotampEntityId($order));
-  }
-
   protected function getContact() {
     $contactRef = $this->checkoutSession->getBotampContactRef();
     return (new Contact())->get($contactRef);
@@ -47,7 +45,7 @@ class OrderEntity extends Resource {
 
   protected function getBotampEntityId($order) {
     $subscriptionId =  $order->getBotampSubscriptionId();
-    $subscription = (new Subscription())->get($subscriptionId);
+    $subscription = $this->subscription->get($subscriptionId);
 
     return $subscription->getBody()['data']['attributes']['entity_id'];
   }
