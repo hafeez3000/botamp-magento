@@ -11,7 +11,7 @@
           </resource>
         </resource>
         <resource id="Botamp_Botamp::menu" title="Botamp menu" sortOrder="51">
-            <resource id="Botamp_Botamp::import_products" title="Import products" sortOrder="10"/>
+            <resource id="Botamp_Botamp::import" title="Import products" sortOrder="10"/>
         </resource>
       </resource>
     </resources>
