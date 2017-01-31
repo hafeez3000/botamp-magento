@@ -8,6 +8,9 @@ php:
 
 script:
   - git clone https://github.com/squizlabs/PHP_CodeSniffer.git phpcs
-  - git clone https://github.com/magento-ecg/coding-standard.git magento_coding_standard
-  - phpcs/scripts/phpcs --config-set installed_paths magento_coding_standard
-  - phpcs/scripts/phpcs --ignore=phpcs,magento_coding_standard --standard=EcgM2 .
+  - git clone https://github.com/magento/marketplace-eqp.git eqp
+  - phpcs/scripts/phpcs --config-set installed_paths eqp
+  - phpcs/scripts/phpcs --ignore=phpcs,eqp --standard=MEQP2 .
+  - zip -r botamp_botamp-1.0.0.zip . -x '.git/*' 'phpcs/*' 'eqp/*'
+  - git clone https://github.com/magento/marketplace-tools.git validator
+  - php validator/validate_m2_package.php botamp_botamp-1.0.0.zip
