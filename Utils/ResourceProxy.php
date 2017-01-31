@@ -1,27 +1,49 @@
 <?php
 namespace Botamp\Botamp\Utils;
 
-class ResourceProxy {
+class ResourceProxy
+{
 
-  protected $resource;
-  protected $backendSession;
+    private $allResources;
+    private $currentResource;
+    private $sessionHelper;
 
-  public function __construct($resource) {
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $this->resource = $resource;
-    $this->backendSession = $objectManager->create('\Magento\Backend\Model\Session');
-  }
+    public function __construct(
+        \Botamp\Botamp\ApiResource\Contact $contact,
+        \Botamp\Botamp\ApiResource\Me $me,
+        \Botamp\Botamp\ApiResource\OrderEntity $orderEntity,
+        \Botamp\Botamp\ApiResource\ProductEntity $productEntity,
+        \Botamp\Botamp\ApiResource\Subscription $subscription,
+        \Botamp\Botamp\Helper\SessionHelper $sessionHelper
+    ) {
 
-  public function __call($method, $arguments) {
-    $this->backendSession->setBotampAuthStatus('ok');
-    try {
-      // @codingStandardsIgnoreStart
-      $result = call_user_func_array([$this->resource, $method], $arguments);
-      // @codingStandardsIgnoreEnd
-      return $result;
+        $this->allResources = [
+            'contact' => $contact,
+            'me' => $me,
+            'order_entity' => $orderEntity,
+            'product_entity' => $productEntity,
+            'subscription' => $subscription
+        ];
+
+        $this->sessionHelper = $sessionHelper;
     }
-    catch (\Botamp\Exceptions\Unauthorized $e) {
-      $this->backendSession->setBotampAuthStatus('unauthorized');
+
+    public function setCurrentResource($currentResourceCode)
+    {
+        $this->currentResource = $this->allResources[$currentResourceCode];
     }
-  }
+
+    public function __call($method, $arguments)
+    {
+        $backendSession = $this->sessionHelper->getSessionObject('backend');
+
+        $backendSession->setBotampAuthStatus('ok');
+        try {
+            // @codingStandardsIgnoreStart
+            return call_user_func_array([$this->currentResource, $method], $arguments);
+            // @codingStandardsIgnoreEnd
+        } catch (\Botamp\Exceptions\Unauthorized $e) {
+            $backendSession->setBotampAuthStatus('unauthorized');
+        }
+    }
 }

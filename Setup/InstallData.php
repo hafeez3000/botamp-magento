@@ -9,15 +9,17 @@ use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-class InstallData implements InstallDataInterface {
-    protected $eavSetupFactory;
-    protected $salesSetupFactory;
+class InstallData implements InstallDataInterface
+{
+    private $eavSetupFactory;
+    private $salesSetupFactory;
 
     public function __construct(
-      EavSetupFactory $eavSetupFactory,
-      SalesSetupFactory $salesSetupFactory) {
-      $this->eavSetupFactory = $eavSetupFactory;
-      $this->salesSetupFactory = $salesSetupFactory;
+        EavSetupFactory $eavSetupFactory,
+        SalesSetupFactory $salesSetupFactory
+    ) {
+        $this->eavSetupFactory = $eavSetupFactory;
+        $this->salesSetupFactory = $salesSetupFactory;
     }
     // @codingStandardsIgnoreStart
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context) {

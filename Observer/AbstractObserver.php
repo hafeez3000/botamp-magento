@@ -1,13 +1,14 @@
 <?php
 namespace Botamp\Botamp\Observer;
 
-use Botamp\Botamp\Utils;
+abstract class AbstractObserver
+{
+    //@codingStandardsIgnoreStart
+    protected $resourceProxy;
+    //@codingStandardsIgnoreEnd
 
-abstract class AbstractObserver {
-
-  protected $resourceProxy;
-
-  public function __construct($resource) {
-    $this->resourceProxy = new \Botamp\Botamp\Utils\ResourceProxy($resource);
-  }
+    public function __construct(\Botamp\Botamp\Utils\ResourceProxy $resourceProxy)
+    {
+        $this->resourceProxy = $resourceProxy;
+    }
 }

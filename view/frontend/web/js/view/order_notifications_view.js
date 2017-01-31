@@ -1,6 +1,6 @@
 define(
-  ['ko', 'uiComponent'],
-  function (ko, Component) {
+    ['ko', 'uiComponent'],
+    function (ko, Component) {
     'use strict';
 
     return Component.extend({
@@ -16,11 +16,12 @@ define(
         return this;
       }
     });
-  }
+    }
 );
 
-function initMessengerPlugin() {
-  window.fbAsyncInit = function() {
+function initMessengerPlugin()
+{
+  window.fbAsyncInit = function () {
     FB.init({
       appId      : window.checkoutConfig.botampPageAttributes.appId,
       xfbml      : true,
@@ -28,9 +29,10 @@ function initMessengerPlugin() {
     });
   };
 
-  (function(d, s, id){
+  (function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
+    if (d.getElementById(id)) {
+return;}
     js = d.createElement(s); js.id = id;
     js.src = '//connect.facebook.net/en_US/sdk.js';
     fjs.parentNode.insertBefore(js, fjs);

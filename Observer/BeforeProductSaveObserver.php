@@ -1,15 +1,12 @@
 <?php
 namespace Botamp\Botamp\Observer;
 
-class BeforeProductSaveObserver extends AbstractObserver implements \Magento\Framework\Event\ObserverInterface {
-  // @codingStandardsIgnoreStart
-  public function __construct(\Botamp\Botamp\Resource\ProductEntity $productEntity) {
-    parent::__construct($productEntity);
-  }
-  // @codingStandardsIgnoreEnd
-
-  public function execute(\Magento\Framework\Event\Observer $observer) {
-    $product = $observer->getEvent()->getProduct();
-    $this->resourceProxy->createOrUpdate($product);
-  }
+class BeforeProductSaveObserver extends AbstractObserver implements \Magento\Framework\Event\ObserverInterface
+{
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        $this->resourceProxy->setCurrentResource('product_entity');
+        $product = $observer->getEvent()->getProduct();
+        $this->resourceProxy->createOrUpdate($product);
+    }
 }
