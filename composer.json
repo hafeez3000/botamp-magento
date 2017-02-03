@@ -1,5 +1,5 @@
 {
-  "name": "botamp/botamp-magento",
+  "name": "botamp/botamp",
   "description": "Botamp extension for Magento2",
   "type": "magento2-module",
   "version": "1.0.0",
